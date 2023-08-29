@@ -1,8 +1,7 @@
-import os
 import re
 from flask import Flask, request
 import telegram
-from app.config import bot_token, bot_user_name,URL
+from telebot.credentials import bot_token, bot_user_name,URL
 
 
 global bot
@@ -32,6 +31,21 @@ def respond():
       """
       # send the welcoming message
       bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
+
+
+  else:
+      try:
+          # clear the message we got from any non alphabets
+          text = re.sub(r"\W", "_", text)
+          # create the api link for the avatar based on http://avatars.adorable.io/
+          url = "https://api.adorable.io/avatars/285/{}.png".format(text.strip())
+          # reply with a photo to the name the user sent,
+          # note that you can send photos by url and telegram will fetch it for you
+          bot.sendPhoto(chat_id=chat_id, photo=url, reply_to_message_id=msg_id)
+      except Exception:
+          # if things went wrong
+          bot.sendMessage(chat_id=chat_id, text="There was a problem in the name you used, please enter different name", reply_to_message_id=msg_id)
+
   return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
@@ -48,4 +62,4 @@ def index():
 
 
 if __name__ == '__main__':
-  app.run()
+  app.run(threaded=True)
