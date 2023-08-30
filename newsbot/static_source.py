@@ -58,7 +58,7 @@ def fetch_news_coin_telegraph():
   data = coin_telegraph()
   index = 0
 
-  if globals()['last_news_coin_telegraph']:
+  if globals()['last_news_coin_telegraph'] in list(data):
     index = list(data).index(globals()['last_news_coin_telegraph'])
 
   if index == 0:
