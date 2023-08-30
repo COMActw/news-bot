@@ -1,4 +1,4 @@
-from telegram.ext import ApplicationBuilder, InlineQueryHandler, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CallbackQueryHandler, CommandHandler, ContextTypes
 import logging
 from newsbot.credentials import bot_token
 from newsbot.static_source import *
@@ -25,7 +25,7 @@ def start_bot():
   application = ApplicationBuilder().token(TOKEN).build()
 
   application.add_handler(CommandHandler('start', start))
-  application.add_handler(InlineQueryHandler(button))
+  application.add_handler(CallbackQueryHandler(button))
   application.add_handler(CommandHandler('hello', test))
 
   application.run_polling(allowed_updates=Update.ALL_TYPES)
