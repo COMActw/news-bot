@@ -41,7 +41,7 @@ def get_coin_telegraph_first_time():
 
 def fetch_news_coin_desk():
   data = coin_desk()
-  index = data.index(globals()['last_news_coin_desk'])
+  index = list(data).index(globals()['last_news_coin_desk'])
   if index == 0:
     return []
   new_list = data[:index]
@@ -51,7 +51,7 @@ def fetch_news_coin_desk():
 
 def fetch_news_coin_telegraph():
   data = coin_telegraph()
-  index = data.index(globals()['last_news_coin_telegraph'])
+  index = list(data).index(globals()['last_news_coin_telegraph'])
   if index == 0:
     return []
   new_list = data[:index]
