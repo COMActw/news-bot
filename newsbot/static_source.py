@@ -1,13 +1,49 @@
 import requests
+from newsbot.credentials import rapid_api_key
+from telegram.ext import ContextTypes
+from telegram import Update
+from newsbot.bot_common import send_message_with_inline_button
+
+import asyncio
 
 global last_news_coin_desk
 global last_news_coin_telegraph
+
+global RAPID_TOKEN
+RAPID_TOKEN = rapid_api_key
+
+
+
+async def fetch_static_new_first_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  # coin_desk
+  coin_desk_first = get_coin_desk_first_time()
+  for item in coin_desk_first:
+    await send_message_with_inline_button(update, context, item['title'])
+
+  # coin_telegraph
+  coin_telegraph_first = get_coin_telegraph_first_time()
+  for item in coin_telegraph_first:
+    await send_message_with_inline_button(update, context, item['title'])
+
+async def fetch_static_source(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  while True:
+    new_news_coin_desk = fetch_news_coin_desk()
+    if new_news_coin_desk:
+      for item in new_news_coin_desk:
+        await send_message_with_inline_button(update, context, item['title'])
+
+    new_news_coin_tele_graph = fetch_news_coin_telegraph()
+    if new_news_coin_tele_graph:
+      for item in new_news_coin_tele_graph:
+        await send_message_with_inline_button(update, context, item['title'])
+
+    await asyncio.sleep(60)
 
 def coin_desk():
   url = "https://crypto-news16.p.rapidapi.com/news/coindesk"
 
   headers = {
-    "X-RapidAPI-Key": "2d443ebce2msh7b1663696b075ddp14ae2djsn6aae24db547b",
+    "X-RapidAPI-Key": RAPID_TOKEN,
     "X-RapidAPI-Host": "crypto-news16.p.rapidapi.com"
   }
 
@@ -19,7 +55,7 @@ def coin_telegraph():
   url = "https://crypto-news16.p.rapidapi.com/news/cointelegraph"
 
   headers = {
-    "X-RapidAPI-Key": "2d443ebce2msh7b1663696b075ddp14ae2djsn6aae24db547b",
+    "X-RapidAPI-Key": RAPID_TOKEN,
     "X-RapidAPI-Host": "crypto-news16.p.rapidapi.com"
   }
 
